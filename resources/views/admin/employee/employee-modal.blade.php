@@ -96,14 +96,14 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="row">
+                        {{-- <div class="row">
                             <div class="col-12">
                                 <div class="form-group mandatory">
                                     <label class="form-label text-dark">Active Status:</label>
                                     <input type="text" class="form-control" name="emp_active" id="emp_active" value="1" readonly>
                                 </div>
                             </div>
-                        </div>
+                        </div> --}}
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -212,14 +212,14 @@
                                 </div>
                             </div>
 
-                            <div class="row">
+                            {{-- <div class="row">
                                 <div class="col-12">
                                     <div class="form-group mandatory">
                                         <label class="form-label text-dark">Active Status:</label>
                                         <input type="number" class="form-control" value="{{ $employee->emp_active ? '1' : '0' }}" name="emp_active" id="emp_active" readonly>
                                     </div>
                                 </div>
-                            </div>
+                            </div> --}}
                         </div>
                     </div>
                     <div class="modal-footer">
