@@ -5,6 +5,9 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Auth;
+
 
 class EmployeeController extends Controller
 {
@@ -38,9 +41,12 @@ class EmployeeController extends Controller
             'emp_created_at' => now(),
             'emp_active' => 1,
             'emp_profile_pic' => 'default_profile_pic.jpg',
+            'emp_created_by' => Auth::id(),
+
         ]);
 
-        return redirect()->back()->with('success', 'Employee added successfully');
+        Session::flash('success', 'Employee added successfully');
+        return redirect()->back();
     }
 
     public function getEmployees()
@@ -49,13 +55,44 @@ class EmployeeController extends Controller
         $employees = DB::table('employee')
             ->join('role', 'employee.role_id', '=', 'role.role_id')
             ->select('employee.*', 'role.role_name')
-            ->where('employee.emp_active', 1) // Only fetch active employees
+            ->where('employee.emp_active', 1)
             ->get();
         $roles = DB::table('role')->get();
 
-        return view('employees.index', compact('employees', 'roles'));
+        $successMessage = Session::get('success');
 
-        // return $employees;
+
+        return view('employees.index', compact('employees', 'roles', 'successMessage'));
+    }
+
+    public function updateEmployee(Request $request, $emp_id)
+    {
+        // Validate input
+        $request->validate([
+            'emp_last_name' => 'required|string|max:255',
+            'emp_first_name' => 'required|string|max:255',
+            'role_id' => 'required|exists:role,role_id',
+        ]);
+
+        // Find the employee by ID
+        $employee = DB::table('employee')->where('emp_id', $emp_id)->first();
+
+        if ($employee) {
+            // Update employee details
+            DB::table('employee')
+                ->where('emp_id', $emp_id)
+                ->update([
+                    'emp_last_name' => $request->input('emp_last_name'),
+                    'emp_first_name' => $request->input('emp_first_name'),
+                    'role_id' => $request->input('role_id'),
+                    'emp_updated_by' => Auth::id(),
+                    'emp_updated_at' => now(),
+                    // Update other fields here
+                ]);
+
+            Session::flash('success', 'Employee edited successfully');
+            return redirect()->back();
+        }
     }
 
     public function softDeleteEmployee($emp_id)
@@ -64,16 +101,7 @@ class EmployeeController extends Controller
             ->where('emp_id', $emp_id)
             ->update(['emp_active' => 0]);
 
-        return redirect()->back()->with('success', 'Employee deleted successfully');
+        Session::flash('success', 'Employee deleted successfully');
+        return redirect()->back();
     }
-
-    // public function restoreEmployee($emp_id){
-    //     DB::table('employee')
-    //         ->where('emp_id', $emp_id)
-    //         ->update(['emp_active' => 1]);
-
-    //     return redirect()->back()->with("success", "Employees are restored successfully");
-    // }
-
-
 }

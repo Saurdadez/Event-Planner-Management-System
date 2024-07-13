@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\DB;
 
 class RoleController extends Controller
@@ -21,20 +23,10 @@ class RoleController extends Controller
             'role_description' => $request->input('role_description'),
             'role_created_at' => now(),
             'role_active' => 1,
+            'role_created_by' => Auth::id(),
         ]);
-
-
-        // Redirect back or to a specific route with a success message
         return redirect()->back()->with('success', 'Role created successfully.');
-
-
     }
-
-    // public function getRoles(){
-    //     $roles = DB::table('role')->get();
-    //     return view('admin.employee.employee-modal', compact('roles'));
-
-    // }
 
     public function getRoles()
     {
@@ -51,21 +43,40 @@ class RoleController extends Controller
         // return $employees;
     }
 
-    // public function deleteEmployeeRole($role_id){
-    //     DB::table('role')
-    //         ->where('role_id', $role_id)
-    //         ->update(['role_active' => 0]);
+    public function updateRole(Request $request, $role_id)
+    {
+        // Validate input
+        $request->validate([
+            'role_name' => 'required|string|max:255',
+            'role_description' => 'required|string|max:255',
+        ]);
 
-    //     return redirect()->back()->with('success', 'Role deleted successfully');
+        // Find the employee by ID
+        $role = DB::table('role')->where('role_id', $role_id)->first();
 
-    // }
+        if ($role) {
+            // Update employee details
+            DB::table('role')
+                ->where('role_id', $role_id)
+                ->update([
+                    'role_name' => $request->input('role_name'),
+                    'role_description' => $request->input('role_description'),
+                    'role_modified_by' => Auth::id(),
+                    'role_modified_at' => now(),
+                    // Update other fields here
+                ]);
+
+            Session::flash('success', 'Role edited successfully');
+            return redirect()->back();
+        }
+    }
+
     public function deleteRole($role_id)
-{
-    DB::table('role')
-        ->where('role_id', $role_id)
-        ->update(['role_active' => 0]);
+    {
+        DB::table('role')
+            ->where('role_id', $role_id)
+            ->update(['role_active' => 0]);
 
-    return redirect()->back()->with('success', 'Role deleted successfully.');
-}
-
+        return redirect()->back()->with('success', 'Role deleted successfully.');
+    }
 }

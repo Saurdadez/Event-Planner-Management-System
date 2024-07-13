@@ -4,7 +4,8 @@
     <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
         <div class="modal-content">
             <form class="form form-vertical" method="POST"
-                action="{{ action('App\Http\Controllers\EmployeeController@store') }}" enctype="multipart/form-data" name="add" data-parsley-validate>
+                action="{{ action('App\Http\Controllers\EmployeeController@store') }}" enctype="multipart/form-data"
+                name="add" data-parsley-validate>
                 {{ csrf_field() }}
                 <div class="modal-header bg-primary d-flex align-items-center justify-content-between">
                     <h5 class="modal-title text-white">New Employee</h5>
@@ -96,14 +97,6 @@
                                 </div>
                             </div>
                         </div>
-                        {{-- <div class="row">
-                            <div class="col-12">
-                                <div class="form-group mandatory">
-                                    <label class="form-label text-dark">Active Status:</label>
-                                    <input type="text" class="form-control" name="emp_active" id="emp_active" value="1" readonly>
-                                </div>
-                            </div>
-                        </div> --}}
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -211,15 +204,6 @@
                                     </div>
                                 </div>
                             </div>
-
-                            {{-- <div class="row">
-                                <div class="col-12">
-                                    <div class="form-group mandatory">
-                                        <label class="form-label text-dark">Active Status:</label>
-                                        <input type="number" class="form-control" value="{{ $employee->emp_active ? '1' : '0' }}" name="emp_active" id="emp_active" readonly>
-                                    </div>
-                                </div>
-                            </div> --}}
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -231,8 +215,73 @@
         </div>
     </div>
 
+    <!-- EDIT EMPLOYEE MODAL -->
+    <div class="modal fade text-left" id="editEmployee{{ $employee->emp_id }}" tabindex="-1" role="dialog"
+        aria-labelledby="editEmployeeModal" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
+            <div class="modal-content">
+                <form class="form form-vertical" method="POST"
+                    action="{{ route('employee.update', ['emp_id' => $employee->emp_id]) }}"
+                    enctype="multipart/form-data" name="edit" data-parsley-validate>
+                    @csrf
+                    @method('PUT')
+                    <div class="modal-header bg-primary d-flex align-items-center justify-content-between">
+                        <h5 class="modal-title text-white">Edit Employee</h5>
+                        <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                            <i class="bi bi-x-lg"></i>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-body">
+                            <!-- Employee fields to edit -->
+                            <div class="row">
+                                <div class="col-6">
+                                    <div class="form-group mandatory">
+                                        <label class="form-label text-dark">Last Name:</label>
+                                        <input type="text" class="form-control" name="emp_last_name"
+                                            value="{{ $employee->emp_last_name }}">
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="form-group mandatory">
+                                        <label class="form-label text-dark">First Name:</label>
+                                        <input type="text" class="form-control" name="emp_first_name"
+                                            value="{{ $employee->emp_first_name }}">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Role selection -->
+                            <div class="row">
+                                <div class="col-12">
+                                    <div class="form-group mandatory">
+                                        <label class="form-label text-dark">Role:</label>
+                                        <select class="form-control" name="role_id">
+                                            @foreach ($roles as $role)
+                                                <option value="{{ $role->role_id }}"
+                                                    {{ $employee->role_id == $role->role_id ? 'selected' : '' }}>
+                                                    {{ $role->role_name }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary me-1 mb-1">Save Changes</button>
+                        <button type="button" class="btn btn-secondary me-1 mb-1"
+                            data-dismiss="modal">Close</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+
     <!--DELETE EMPLOYEE-->
-    <div class="modal fade" id="deleteEmployee{{ $employee->emp_id }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal fade" id="deleteEmployee{{ $employee->emp_id }}" tabindex="-1" role="dialog"
+        aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -251,7 +300,6 @@
             </div>
         </div>
     </div>
-
 @endforeach
 
 
@@ -269,7 +317,7 @@
 
     function calculateAge(input) {
         const birthDate = input.value;
-        const modal = input.closest('.modal'); // Find the parent modal element
+        const modal = input.closest('.modal');
         const ageField = modal.querySelector('input[name="emp_age"]');
         if (birthDate) {
             const today = new Date();

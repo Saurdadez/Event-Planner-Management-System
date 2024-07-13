@@ -5,7 +5,7 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <title>Admin Dashboard</title>
     @php
-        $activePage = 'setting'; // set the active page dynamically based on your route or controller logic
+        $activePage = 'setting';
     @endphp
 </head>
 
@@ -18,7 +18,7 @@
             <!-- Main Content -->
             <div id="content">
                 @include('layouts.admin.topbar')
-                @if(session('success'))
+                @if (session('success'))
                     <div class="alert alert-success" role="alert">
                         {{ session('success') }}
                     </div>
@@ -48,7 +48,8 @@
                                             Employees</li>
                                     </ol>
                                 </nav>
-                                <button href="#" data-toggle="modal" data-target="#addEmployee" class="btn btn-primary">
+                                <button href="#" data-toggle="modal" data-target="#addEmployee"
+                                    class="btn btn-primary">
                                     <i class="fas fa-plus"></i> Add Employee
                                 </button>
                             </div>
@@ -67,19 +68,26 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            @foreach ( $employees as $employee )
-                                            <tr>
-                                                <td style="text-align: center">{{ $employee->emp_id }}</td>
-                                                <td style="text-align: center">{{ $employee->emp_last_name }}</td>
-                                                <td style="text-align: center">{{ $employee->emp_first_name }}</td>
-                                                <td style="text-align: center">{{ $employee->emp_mobile_number }}</td>
-                                                <td style="text-align: center">{{ $employee->emp_email }}</td>
-                                                <td style="text-align: center">
-                                                    <a href="#" data-toggle="modal" data-target="#viewEmployee{{ $employee->emp_id }}" class="fas fa-eye"></a>
-                                                    <a href="#" class="fas fa-edit"></a>
-                                                    <a href="#" data-toggle="modal" data-target="#deleteEmployee{{ $employee->emp_id }}" class="fas fa-trash"></a>
-                                                </td>
-                                            </tr>
+                                            @foreach ($employees as $employee)
+                                                <tr>
+                                                    <td style="text-align: center">{{ $employee->emp_id }}</td>
+                                                    <td style="text-align: center">{{ $employee->emp_last_name }}</td>
+                                                    <td style="text-align: center">{{ $employee->emp_first_name }}</td>
+                                                    <td style="text-align: center">{{ $employee->emp_mobile_number }}
+                                                    </td>
+                                                    <td style="text-align: center">{{ $employee->emp_email }}</td>
+                                                    <td style="text-align: center">
+                                                        <a href="#" data-toggle="modal"
+                                                            data-target="#viewEmployee{{ $employee->emp_id }}"
+                                                            class="fas fa-eye"></a>
+                                                        <a href="#" data-toggle="modal"
+                                                            data-target="#editEmployee{{ $employee->emp_id }}"
+                                                            class="fas fa-edit"></a>
+                                                        <a href="#" data-toggle="modal"
+                                                            data-target="#deleteEmployee{{ $employee->emp_id }}"
+                                                            class="fas fa-trash"></a>
+                                                    </td>
+                                                </tr>
                                             @endforeach
                                         </tbody>
                                     </table>
@@ -112,64 +120,33 @@
                                             <tr>
                                                 <th style="text-align: left">No.</th>
                                                 <th style="text-align: left">Role</th>
-                                                <th style="text-align: left">Action</th>
+                                                <th style="text-align: center">Action</th>
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <tbody>
-                                                @foreach($roles as $role)
-                                                    <tr>
-                                                        <td style="text-align: left">{{ $role->role_id }}</td>
-                                                        <td style="text-align: left">
-                                                            <a type="button">{{ $role->role_name }}</a>
-                                                        </td>
-                                                        <td style="text-align: center">
-                                                            <!-- Trash icon for deleting role -->
-                                                            <a href="#" data-toggle="modal" data-target="#deleteRole{{ $role->role_id }}" class="fas fa-trash"></a>
-                                                        </td>
-                                                    </tr>
+                                        <tbody>
+                                            @foreach ($roles as $role)
+                                                <tr>
+                                                    <td style="text-align: left">{{ $role->role_id }}</td>
+                                                    <td style="text-align: left">
+                                                        <a href="#" class="role-details" data-toggle="modal"
+                                                            data-target="#roleDetailsModal{{ $role->role_id }}"
+                                                            style="color: inherit; text-decoration: none;">{{ $role->role_name }}</a>
+                                                    </td>
+                                                    <td style="text-align: center">
+                                                        <!-- View icon for edit role -->
+                                                        <a href="#" data-toggle="modal"
+                                                            data-target="#editRole{{ $role->role_id }}"
+                                                            class="fas fa-edit" style="margin-right: 10px"></a>
 
-                                                    {{-- <div class="modal fade" id="deleteRole{{ $role->role_id }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                                        <div class="modal-dialog" role="document">
-                                                            <div class="modal-content">
-                                                                <div class="modal-header">
-                                                                    <h5 class="modal-title" id="exampleModalLabel">Confirm Delete Role</h5>
-                                                                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-                                                                        <span aria-hidden="true">×</span>
-                                                                    </button>
-                                                                </div>
-                                                                <div class="modal-body">
-                                                                    Are you sure you want to delete this role?
-                                                                </div>
-                                                                <div class="modal-footer">
-                                                                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                                                                    <a class="btn btn-primary" href="{{ url('/role/delete/' . $employee->emp_id) }}">Delete</a>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div> --}}
-                                                    <div class="modal fade" id="deleteRole{{ $role->role_id }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                                        <div class="modal-dialog" role="document">
-                                                            <div class="modal-content">
-                                                                <div class="modal-header">
-                                                                    <h5 class="modal-title" id="exampleModalLabel">Confirm Delete Role</h5>
-                                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                                        <span aria-hidden="true">&times;</span>
-                                                                    </button>
-                                                                </div>
-                                                                <div class="modal-body">
-                                                                    Are you sure you want to delete this role?
-                                                                </div>
-                                                                <div class="modal-footer">
-                                                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                                                                    <a href="{{ route('role.delete', ['role_id' => $role->role_id]) }}" class="btn btn-danger">Delete</a>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-
-                                                @endforeach
-                                            </tbody>
+                                                        <!-- Trash icon for deleting role -->
+                                                        <a href="#" data-toggle="modal"
+                                                            data-target="#deleteRole{{ $role->role_id }}"
+                                                            class="fas fa-trash"></a>
+                                                    </td>
+                                                </tr>
+                                            @endforeach
+                                        </tbody>
 
                                         </tbody>
                                     </table>
@@ -190,6 +167,17 @@
     @include('components.plugins')
     @include('components.table')
 
+
 </body>
 
 </html>
+
+<script>
+    $(document).ready(function() {
+        $('.role-details').click(function(e) {
+            e.preventDefault();
+            var modalSelector = $(this).attr('data-target');
+            $(modalSelector).modal('show');
+        });
+    });
+</script>

@@ -34,9 +34,6 @@
                                         <i class="fas fa-plus"></i>Add Service
                                     </a>
                                 </div>
-                                {{-- <button href="#" data-toggle="modal" data-target="#addService" class="btn btn-primary">
-                                    <i class="fas fa-plus"></i> New Client
-                                </button> --}}
                             </div>
                             <div class="card-body">
                                 <!-- Service Card Content -->
@@ -52,17 +49,19 @@
                                             </tr>
                                         </thead>
                                         <tbody>
+                                            @foreach ($services as $service)
                                             <tr>
-                                                <td style="text-align: center">1</td>
-                                                <td style="text-align: center">Package A</td>
-                                                <td style="text-align: center">25,000</td>
-                                                <td style="text-align: center">2024-02-26 15:45:33</td>
+                                                <td style="text-align: center">{{$service->service_id}}</td>
+                                                <td style="text-align: center">{{$Service->service_name}}</td>
+                                                <td style="text-align: center">{{$service->service_cost}}</td>
+                                                <td style="text-align: center">{{$service->service_created_at}}</td>
                                                 <td style="text-align: center">
-                                                    <a href="#" class="fas fa-eye"></a>
-                                                    <a href="#" class="fas fa-edit"></a>
-                                                    <a href="#" class="fas fa-trash"></a>
+                                                    <a href="#" data-toggle="modal" data-target="#viewService{{$service->service_id}}" class="fas fa-eye"></a>
+                                                    <a href="#" data-toggle="modal" data-target="#editService{{$service->service_id}}" class="fas fa-edit"></a>
+                                                    <a href="#" data-toggle="modal" data-target="#deleteService{{$service->service_id}}" class="fas fa-trash"></a>
                                                 </td>
                                             </tr>
+                                            @endforeach
                                         </tbody>
                                     </table>
                                 </div>
@@ -113,6 +112,7 @@
         <!-- End of Content Wrapper -->
     </div>
     <!-- End of Page Wrapper -->
+
     @include('layouts.admin.logout')
     @include('admin.service.service-modal')
     @include('components.plugins')
