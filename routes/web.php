@@ -44,7 +44,11 @@ Route::group(['middleware' => 'auth'], function () {
     Route::put('/role/update/{role_id}', [RoleController::class, 'updateRole'])->name('role.update');
 
     Route::get('/services', [AdminController::class, 'services'])->name('services');
-    Route::get('/services/store', [ServiceController::class. 'store']);
+    Route::post('/service/store', [ServiceController::class, 'store'])->name('services.store');
+    Route::get('/service', [ServiceController::class, 'getServices']);
+    Route::put('/service/update/{service_id}', [ServiceController::class, 'updateServices'])->name('service.update');
+
+
 
     Route::get('/income-report', [AdminController::class, 'income'])->name('income-report');
 

@@ -1,8 +1,10 @@
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
     @include('components.head')
     <title>Admin Dashboard</title>
+    @include('components.table')
     @php
     $activePage = 'service'; // set the active page dynamically based on your route or controller logic
     @endphp
@@ -52,7 +54,7 @@
                                             @foreach ($services as $service)
                                             <tr>
                                                 <td style="text-align: center">{{$service->service_id}}</td>
-                                                <td style="text-align: center">{{$Service->service_name}}</td>
+                                                <td style="text-align: center">{{$service->service_name}}</td>
                                                 <td style="text-align: center">{{$service->service_cost}}</td>
                                                 <td style="text-align: center">{{$service->service_created_at}}</td>
                                                 <td style="text-align: center">
